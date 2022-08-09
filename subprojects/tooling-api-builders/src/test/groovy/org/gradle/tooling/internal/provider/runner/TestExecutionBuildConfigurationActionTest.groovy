@@ -76,7 +76,7 @@ class TestExecutionBuildConfigurationActionTest extends Specification {
         debugOptions = Mock()
         debugOptions.isDebugMode() >> false
         testExecutionRequest.getDebugOptions() >> debugOptions
-        testExecutionRequest.getTestPatternSpecs() >> []
+        testExecutionRequest.getTaskSpecs() >> []
 
         setupProject()
         setupTestTask()
@@ -98,7 +98,6 @@ class TestExecutionBuildConfigurationActionTest extends Specification {
         1 * testExecutionRequest.getInternalJvmTestRequests() >> []
         1 * testExecutionRequest.getTaskAndTests() >> [:]
         1 * testExecutionRequest.isRunDefaultTasks() >> false
-        1 * testExecutionRequest.getTasks() >> []
 
         setup:
         def buildConfigurationAction = new TestExecutionBuildConfigurationAction(testExecutionRequest, gradleInternal);
@@ -116,7 +115,6 @@ class TestExecutionBuildConfigurationActionTest extends Specification {
         1 * testExecutionRequest.getInternalJvmTestRequests() >> internalJvmRequests
         1 * testExecutionRequest.getTaskAndTests() >> tasksAndTests
         1 * testExecutionRequest.isRunDefaultTasks() >> false
-        1 * testExecutionRequest.getTasks() >> []
 
         def buildConfigurationAction = new TestExecutionBuildConfigurationAction(testExecutionRequest, gradleInternal);
         when:
