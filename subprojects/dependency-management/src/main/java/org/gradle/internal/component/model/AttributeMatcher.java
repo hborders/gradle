@@ -26,12 +26,18 @@ import java.util.Collection;
 import java.util.List;
 
 public interface AttributeMatcher {
+    /**
+     * Determines whether the given candidate is compatible with the requested criteria.
+     */
     boolean isMatching(AttributeContainerInternal candidate, AttributeContainerInternal requested);
 
     <T> boolean isMatching(Attribute<T> attribute, T candidate, T requested);
 
     <T extends HasAttributes> List<T> matches(Collection<? extends T> candidates, AttributeContainerInternal requested, AttributeMatchingExplanationBuilder builder);
 
+    /**
+     * Selects the candidates from the given set that are compatible with the requested criteria.
+     */
     <T extends HasAttributes> List<T> matches(Collection<? extends T> candidates, AttributeContainerInternal requested, @Nullable T fallback, AttributeMatchingExplanationBuilder builder);
 
     List<MatchingDescription<?>> describeMatching(AttributeContainerInternal candidate, AttributeContainerInternal requested);

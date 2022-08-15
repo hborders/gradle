@@ -15,41 +15,23 @@
  */
 package org.gradle.internal.component.model;
 
-import com.google.common.collect.Sets;
 import org.gradle.api.attributes.Attribute;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
+import org.gradle.util.internal.GUtil;
 
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AttributeSelectionUtils {
     public static Attribute<?>[] collectExtraAttributes(AttributeSelectionSchema schema, ImmutableAttributes[] candidateAttributeSets, ImmutableAttributes requested) {
-        Set<Attribute<?>> extraAttributes = Sets.newLinkedHashSet();
-        for (ImmutableAttributes attributes : candidateAttributeSets) {
-            extraAttributes.addAll(attributes.keySet());
-        }
-        removeSameAttributes(requested, extraAttributes);
-        Attribute<?>[] extraAttributesArray = extraAttributes.toArray(new Attribute<?>[0]);
-        for (int i = 0; i < extraAttributesArray.length; i++) {
-            Attribute<?> extraAttribute = extraAttributesArray[i];
-            Attribute<?> schemaAttribute = schema.getAttribute(extraAttribute.getName());
-            if (schemaAttribute != null) {
-                extraAttributesArray[i] = schemaAttribute;
-            }
-        }
-        return extraAttributesArray;
-    }
+        Set<String> requestedNames = requested.keySet().stream().map(Attribute::getName).collect(Collectors.toSet());
 
-    private static void removeSameAttributes(ImmutableAttributes requested, Set<Attribute<?>> extraAttributes) {
-        for (Attribute<?> attribute : requested.keySet()) {
-            Iterator<Attribute<?>> it = extraAttributes.iterator();
-            while (it.hasNext()) {
-                Attribute<?> next = it.next();
-                if (next.getName().equals(attribute.getName())) {
-                    it.remove();
-                    break;
-                }
-            }
-        }
+        return Arrays.stream(candidateAttributeSets)
+            .flatMap(it -> it.keySet().stream())
+            .distinct()
+            .filter(it -> !requestedNames.contains(it.getName()))
+            .map(it -> GUtil.elvis(schema.getAttribute(it.getName()), it))
+            .toArray(Attribute<?>[]::new);
     }
 }

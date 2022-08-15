@@ -16,14 +16,12 @@
 
 package org.gradle.internal.component.model
 
-
 import org.gradle.api.attributes.LibraryElements
 import org.gradle.api.attributes.Usage
 import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.internal.artifacts.JavaEcosystemSupport
 import org.gradle.api.internal.attributes.AttributeContainerInternal
 import org.gradle.api.internal.attributes.DefaultAttributesSchema
-import org.gradle.api.internal.attributes.EmptySchema
 import org.gradle.internal.isolation.TestIsolatableFactory
 import org.gradle.util.AttributeTestUtil
 import org.gradle.util.TestUtil
@@ -31,14 +29,11 @@ import spock.lang.Specification
 
 class JavaEcosystemAttributeMatcherTest extends Specification {
 
-    def matcher = new ComponentAttributeMatcher()
-    def schema = new DefaultAttributesSchema(matcher, TestUtil.instantiatorFactory(), new TestIsolatableFactory())
-    def selectionSchema
+    def schema = new DefaultAttributesSchema(TestUtil.instantiatorFactory(), new TestIsolatableFactory())
     def explanationBuilder = Stub(AttributeMatchingExplanationBuilder)
 
     def setup() {
         JavaEcosystemSupport.configureSchema(schema, TestUtil.objectFactory())
-        selectionSchema = schema.mergeWith(EmptySchema.INSTANCE)
     }
 
     def "resolve compileClasspath with java plugin"() {
@@ -55,7 +50,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements,
                 runtimeElementsClasses
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElements ]
     }
@@ -75,7 +70,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements,
                 runtimeElementsClasses
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElementsClasses ]
     }
@@ -94,7 +89,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements,
                 runtimeElementsClasses
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ runtimeElements ]
     }
@@ -114,7 +109,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements,
                 runtimeElementsClasses
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ runtimeElements ]
     }
@@ -141,7 +136,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements11,
                 runtimeElementsClasses11,
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElements ]
     }
@@ -170,7 +165,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements11,
                 runtimeElementsClasses11,
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElementsClasses ]
     }
@@ -208,7 +203,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements11,
                 runtimeElementsClasses11,
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElements9 ]
     }
@@ -246,7 +241,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 runtimeElements11,
                 runtimeElementsClasses11,
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElementsClasses9 ]
     }
@@ -272,7 +267,7 @@ class JavaEcosystemAttributeMatcherTest extends Specification {
                 apiElements11,
                 runtimeElements11,
         ]
-        def matches = matcher.match(selectionSchema, candidates, requested, null, explanationBuilder)
+        def matches = schema.matcher().matches(candidates, requested, null, explanationBuilder)
         then:
         matches == [ apiElements9 ]
     }

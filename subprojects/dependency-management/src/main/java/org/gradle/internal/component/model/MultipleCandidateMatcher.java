@@ -87,12 +87,13 @@ class MultipleCandidateMatcher<T extends HasAttributes> {
     private BitSet remaining;
     private Attribute<?>[] extraAttributes;
 
-    MultipleCandidateMatcher(AttributeSelectionSchema schema, Collection<? extends T> candidates, ImmutableAttributes requested, AttributeMatchingExplanationBuilder explanationBuilder) {
+    private <E extends T> MultipleCandidateMatcher(AttributeSelectionSchema schema, Collection<E> candidates, ImmutableAttributes requested, AttributeMatchingExplanationBuilder explanationBuilder) {
         this.schema = schema;
+        this.candidates = (candidates instanceof List) ? (List<E>) candidates : ImmutableList.copyOf(candidates);
         this.requested = requested;
-        this.candidates = (candidates instanceof List) ? (List<? extends T>) candidates : ImmutableList.copyOf(candidates);
-        candidateAttributeSets = new ImmutableAttributes[candidates.size()];
         this.explanationBuilder = explanationBuilder;
+
+        candidateAttributeSets = new ImmutableAttributes[candidates.size()];
         for (int i = 0; i < candidates.size(); i++) {
             candidateAttributeSets[i] = ((AttributeContainerInternal) this.candidates.get(i).getAttributes()).asImmutable();
         }
@@ -102,7 +103,11 @@ class MultipleCandidateMatcher<T extends HasAttributes> {
         compatible.set(0, candidates.size());
     }
 
-    public List<T> getMatches() {
+    public static <T extends HasAttributes, E extends T> List<T> getMatches(AttributeSelectionSchema schema, Collection<E> candidates, ImmutableAttributes requested, AttributeMatchingExplanationBuilder explanationBuilder) {
+        return new MultipleCandidateMatcher<T>(schema, candidates, requested, explanationBuilder).getMatches();
+    }
+
+    private List<T> getMatches() {
         fillRequestedValues();
         findCompatibleCandidates();
         if (compatible.cardinality() <= 1) {
@@ -184,14 +189,17 @@ class MultipleCandidateMatcher<T extends HasAttributes> {
             int lengthOfOtherMatch = 0;
             for (int a = 0; a < requestedAttributes.size(); a++) {
                 if (getCandidateValue(c, a) == null) {
+                    // Candidate is missing this attribute.
                     continue;
                 }
                 lengthOfOtherMatch++;
                 if (getCandidateValue(candidateWithLongestMatch, a) == null) {
+                    // This candidate has the value but the longest does not. Thus, longest is not a superset.
                     return false;
                 }
             }
             if (lengthOfOtherMatch == lengthOfLongestMatch) {
+                // There are multiple candidates with the same match length. Thus, there is no longest.
                 return false;
             }
         }
@@ -396,7 +404,7 @@ class MultipleCandidateMatcher<T extends HasAttributes> {
         requestedAttributeValues[a] = value;
     }
 
-    private void setCandidateValue(int c, int a, Object value) {
+    private void setCandidateValue(int c, int a, @Nullable Object value) {
         requestedAttributeValues[getValueIndex(c, a)] = value;
     }
 

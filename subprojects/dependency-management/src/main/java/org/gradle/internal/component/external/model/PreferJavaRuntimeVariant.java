@@ -25,6 +25,7 @@ import org.gradle.api.internal.attributes.MultipleCandidatesResult;
 import org.gradle.api.internal.model.NamedObjectInstantiator;
 import org.gradle.internal.Cast;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -52,6 +53,18 @@ public class PreferJavaRuntimeVariant extends EmptySchema {
     @Override
     public Set<Attribute<?>> getAttributes() {
         return SUPPORTED_ATTRIBUTES;
+    }
+
+    @Nullable
+    @Override
+    public Attribute<?> getAttributeByName(String name) {
+        if (Usage.USAGE_ATTRIBUTE.getName().equals(name)) {
+            return Usage.USAGE_ATTRIBUTE;
+        } else if (LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE.getName().equals(name)) {
+            return LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE;
+        } else {
+            return null;
+        }
     }
 
     @Override
