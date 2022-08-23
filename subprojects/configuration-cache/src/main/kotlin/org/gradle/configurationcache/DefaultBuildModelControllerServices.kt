@@ -178,12 +178,12 @@ class DefaultBuildModelControllerServices(
         }
 
         fun createLocalComponentRegistry(
-                currentBuild: BuildState,
-                projectStateRegistry: ProjectStateRegistry,
-                calculatedValueContainerFactory: CalculatedValueContainerFactory,
-                cache: BuildTreeConfigurationCache,
-                provider: LocalComponentProvider,
-                otherBuildProvider: LocalComponentInAnotherBuildProvider
+            currentBuild: BuildState,
+            projectStateRegistry: ProjectStateRegistry,
+            calculatedValueContainerFactory: CalculatedValueContainerFactory,
+            cache: BuildTreeConfigurationCache,
+            provider: LocalComponentProvider,
+            otherBuildProvider: LocalComponentInAnotherBuildProvider
         ): LocalComponentRegistry {
             val effectiveProvider = ConfigurationCacheAwareLocalComponentProvider(provider, cache)
             return VintageModelProvider().createLocalComponentRegistry(currentBuild, projectStateRegistry, calculatedValueContainerFactory, effectiveProvider, otherBuildProvider)
@@ -207,11 +207,11 @@ class DefaultBuildModelControllerServices(
         }
 
         fun createLocalComponentRegistry(
-                currentBuild: BuildState,
-                projectStateRegistry: ProjectStateRegistry,
-                calculatedValueContainerFactory: CalculatedValueContainerFactory,
-                provider: LocalComponentProvider,
-                otherBuildProvider: LocalComponentInAnotherBuildProvider
+            currentBuild: BuildState,
+            projectStateRegistry: ProjectStateRegistry,
+            calculatedValueContainerFactory: CalculatedValueContainerFactory,
+            provider: LocalComponentProvider,
+            otherBuildProvider: LocalComponentInAnotherBuildProvider
         ): LocalComponentRegistry {
             return DefaultLocalComponentRegistry(currentBuild.buildIdentifier, projectStateRegistry, calculatedValueContainerFactory, provider, otherBuildProvider)
         }
