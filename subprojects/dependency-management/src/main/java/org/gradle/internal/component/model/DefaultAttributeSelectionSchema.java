@@ -24,6 +24,7 @@ import org.gradle.api.internal.attributes.CompatibilityRule;
 import org.gradle.api.internal.attributes.DisambiguationRule;
 import org.gradle.api.internal.attributes.EmptySchema;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
+import org.gradle.util.internal.GUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -130,13 +131,21 @@ public class DefaultAttributeSelectionSchema implements AttributeSelectionSchema
 
     @Override
     public Attribute<?>[] collectExtraAttributes(ImmutableAttributes[] candidateAttributeSets, ImmutableAttributes requested) {
+        // It's almost always the same attribute sets which are compared, so in order to avoid a lot of memory allocation
+        // during computation of the intersection, we cache the result here.
         ExtraAttributesEntry entry = new ExtraAttributesEntry(candidateAttributeSets, requested);
-        Attribute<?>[] attributes = extraAttributesCache.get(entry);
-        if (attributes == null) {
-            attributes = AttributeSelectionUtils.collectExtraAttributes(this, candidateAttributeSets, requested);
-            extraAttributesCache.put(entry, attributes);
-        }
-        return attributes;
+        return extraAttributesCache.computeIfAbsent(entry, key -> {
+            Set<String> requestedNames = requested.keySet().stream().map(Attribute::getName).collect(Collectors.toSet());
+            return Arrays.stream(candidateAttributeSets)
+                .flatMap(it -> it.keySet().stream())
+                .distinct()
+                .filter(it -> !requestedNames.contains(it.getName()))
+                // Some of these attributes might be weakly typed, e.g. coming as Strings from an
+                // artifact repository. We always check whether the schema has a more strongly typed
+                // version of an attribute and use that one instead to apply its disambiguation rules.
+                .map(it -> GUtil.elvis(this.getAttribute(it.getName()), it))
+                .toArray(Attribute<?>[]::new);
+        });
     }
 
     @Override

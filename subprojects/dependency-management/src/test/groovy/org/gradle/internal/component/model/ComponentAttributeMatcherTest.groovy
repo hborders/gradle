@@ -657,7 +657,12 @@ class ComponentAttributeMatcherTest extends Specification {
 
         @Override
         Attribute<?>[] collectExtraAttributes(ImmutableAttributes[] candidates, ImmutableAttributes requested) {
-            AttributeSelectionUtils.collectExtraAttributes(this, candidates, requested)
+            Set<String> requestedNames = requested.keySet().stream().map(Attribute::getName).collect(Collectors.toSet());
+            return Arrays.stream(candidates)
+                .flatMap(it -> it.keySet().stream())
+                .distinct()
+                .filter(it -> !requestedNames.contains(it.getName()))
+                .toArray(Attribute<?>[]::new);
         }
 
         @Override
