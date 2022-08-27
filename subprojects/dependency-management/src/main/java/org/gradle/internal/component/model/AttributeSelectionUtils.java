@@ -31,6 +31,9 @@ public class AttributeSelectionUtils {
             .flatMap(it -> it.keySet().stream())
             .distinct()
             .filter(it -> !requestedNames.contains(it.getName()))
+            // Some of these attributes might be weakly typed, e.g. coming as Strings from an
+            // artifact repository. We always check whether the schema has a more strongly typed
+            // version of an attribute and use that one instead to apply its disambiguation rules.
             .map(it -> GUtil.elvis(schema.getAttribute(it.getName()), it))
             .toArray(Attribute<?>[]::new);
     }

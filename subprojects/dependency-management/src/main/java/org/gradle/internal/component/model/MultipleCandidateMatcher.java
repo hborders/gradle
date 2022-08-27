@@ -349,10 +349,7 @@ class MultipleCandidateMatcher<T extends HasAttributes> {
 
     /**
      * Collects attributes that were present on the candidates, but which the consumer did
-     * not ask for. Some of these attributes might be weakly typed, e.g. coming as Strings
-     * from an artifact repository. We always check whether the schema has a more strongly
-     * typed version of an attribute and use that one instead to apply its disambiguation
-     * rules.
+     * not ask for.
      */
     private void collectExtraAttributes() {
         extraAttributes = schema.collectExtraAttributes(candidateAttributeSets, requested);
