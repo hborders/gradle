@@ -21,6 +21,7 @@ import org.gradle.api.attributes.Attribute
 import org.gradle.api.attributes.AttributeContainer
 import org.gradle.api.attributes.Usage
 import org.gradle.api.internal.attributes.AttributesSchemaInternal
+import org.gradle.api.internal.attributes.EmptySchema
 import org.gradle.api.internal.attributes.ImmutableAttributes
 import org.gradle.api.internal.attributes.ImmutableAttributesFactory
 import org.gradle.util.AttributeTestUtil
@@ -32,7 +33,7 @@ class DefaultAttributeSelectionSchemaTest extends Specification {
     private static final ImmutableAttributesFactory ATTRIBUTES_FACTORY = AttributeTestUtil.attributesFactory()
 
     private AttributesSchemaInternal attributesSchema = Mock(AttributesSchemaInternal)
-    private AttributeSelectionSchema schema = new DefaultAttributeSelectionSchema(attributesSchema)
+    private AttributeSelectionSchema schema = new DefaultAttributeSelectionSchema(attributesSchema, EmptySchema.INSTANCE)
 
     def "collects extra attributes, single candidate"() {
         def attr1 = Attribute.of("foo", String)

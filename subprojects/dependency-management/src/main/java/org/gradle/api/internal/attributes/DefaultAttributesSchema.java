@@ -91,10 +91,12 @@ public class DefaultAttributesSchema implements AttributesSchemaInternal {
         return strategies.containsKey(key);
     }
 
+    private final Map<DefaultAttributeSelectionSchema.ExtraAttributesEntry, Attribute<?>[]> extraAttributesCache = new HashMap<>();
+
     @Override
     public AttributeMatcher withProducer(AttributesSchemaInternal producerSchema) {
         return matcherCache.computeIfAbsent(producerSchema, key ->
-            new ComponentAttributeMatcher(new DefaultAttributeSelectionSchema(this, producerSchema)));
+            new ComponentAttributeMatcher(new DefaultAttributeSelectionSchema(this, producerSchema, extraAttributesCache)));
     }
 
     @Override

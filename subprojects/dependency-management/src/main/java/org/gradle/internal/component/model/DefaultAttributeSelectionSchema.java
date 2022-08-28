@@ -22,7 +22,6 @@ import org.gradle.api.internal.attributes.AttributesSchemaInternal;
 import org.gradle.api.internal.attributes.CompatibilityCheckResult;
 import org.gradle.api.internal.attributes.CompatibilityRule;
 import org.gradle.api.internal.attributes.DisambiguationRule;
-import org.gradle.api.internal.attributes.EmptySchema;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
 import org.gradle.util.internal.GUtil;
 
@@ -42,15 +41,18 @@ public class DefaultAttributeSelectionSchema implements AttributeSelectionSchema
     private final AttributesSchemaInternal consumerSchema;
     private final AttributesSchemaInternal producerSchema;
 
-    private final Map<ExtraAttributesEntry, Attribute<?>[]> extraAttributesCache = new HashMap<>();
+    private final Map<ExtraAttributesEntry, Attribute<?>[]> extraAttributesCache;
 
-    public DefaultAttributeSelectionSchema(AttributesSchemaInternal schema) {
-        this(schema, EmptySchema.INSTANCE);
+    public DefaultAttributeSelectionSchema(AttributesSchemaInternal consumerSchema, AttributesSchemaInternal producerSchema, Map<ExtraAttributesEntry, Attribute<?>[]> cache) {
+        this.consumerSchema = consumerSchema;
+        this.producerSchema = producerSchema;
+        this.extraAttributesCache = cache;
     }
 
     public DefaultAttributeSelectionSchema(AttributesSchemaInternal consumerSchema, AttributesSchemaInternal producerSchema) {
         this.consumerSchema = consumerSchema;
         this.producerSchema = producerSchema;
+        this.extraAttributesCache = new HashMap<>();
     }
 
     @Override
@@ -207,7 +209,7 @@ public class DefaultAttributeSelectionSchema implements AttributeSelectionSchema
      * A cache entry key, leveraging _identity_ as the key, because we do interning.
      * This is a performance optimization.
      */
-    private static class ExtraAttributesEntry {
+    public static class ExtraAttributesEntry {
         private final ImmutableAttributes[] candidateAttributeSets;
         private final ImmutableAttributes requestedAttributes;
         private final int hashCode;
