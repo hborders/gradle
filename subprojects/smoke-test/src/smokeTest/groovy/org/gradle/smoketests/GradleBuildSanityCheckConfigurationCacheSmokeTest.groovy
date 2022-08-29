@@ -33,7 +33,6 @@ class GradleBuildSanityCheckConfigurationCacheSmokeTest extends AbstractGradleBu
             ":docs:javadocAll",
             ":architecture-test:test",
             ":tooling-api:toolingApiShadedJar",
-            ":performance:verifyPerformanceScenarioDefinitions",
             ":checkSubprojectsInfo",
         ]
 
@@ -70,7 +69,6 @@ class GradleBuildSanityCheckConfigurationCacheSmokeTest extends AbstractGradleBu
         result.task(":docs:javadocAll").outcome == TaskOutcome.FROM_CACHE
         result.task(":architecture-test:test").outcome == TaskOutcome.FROM_CACHE
         result.task(":tooling-api:toolingApiShadedJar").outcome == TaskOutcome.SUCCESS
-        result.task(":performance:verifyPerformanceScenarioDefinitions").outcome == TaskOutcome.SUCCESS
         result.task(":checkSubprojectsInfo").outcome == TaskOutcome.SUCCESS
     }
 }

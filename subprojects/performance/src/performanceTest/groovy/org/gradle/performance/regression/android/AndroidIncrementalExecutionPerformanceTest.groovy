@@ -23,6 +23,7 @@ import org.gradle.performance.fixture.AndroidTestProject
 import org.gradle.performance.fixture.IncrementalAndroidTestProject
 import org.gradle.performance.regression.corefeature.AbstractIncrementalExecutionPerformanceTest
 import org.gradle.test.fixtures.file.LeaksFileHandles
+import spock.lang.Ignore
 
 import static org.gradle.performance.annotations.ScenarioType.PER_COMMIT
 import static org.gradle.performance.results.OperatingSystem.LINUX
@@ -33,6 +34,7 @@ import static org.gradle.performance.results.OperatingSystem.WINDOWS
     @Scenario(type = PER_COMMIT, operatingSystems = [LINUX, WINDOWS, MAC_OS], testProjects = "santaTrackerAndroidBuild")
 )
 @LeaksFileHandles("The TAPI keeps handles to the distribution it starts open in the test JVM")
+@Ignore
 class AndroidIncrementalExecutionPerformanceTest extends AbstractIncrementalExecutionPerformanceTest implements AndroidPerformanceTestFixture {
     IncrementalAndroidTestProject testProject
 

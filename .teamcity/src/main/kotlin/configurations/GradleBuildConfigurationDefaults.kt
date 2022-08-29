@@ -28,7 +28,6 @@ fun checkCleanDirUnixLike(dir: String, exitOnFailure: Boolean = true) = """
     REPO=$dir
     if [ -e ${'$'}REPO ] ; then
         tree ${'$'}REPO
-        rm -rf ${'$'}REPO
         echo "${'$'}REPO was polluted during the build"
         ${if (exitOnFailure) "exit 1" else ""}
     else
