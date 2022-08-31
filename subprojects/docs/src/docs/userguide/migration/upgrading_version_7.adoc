@@ -52,6 +52,11 @@ Creating a TAR tree from a resource with no backing file is no longer supported.
 Instead, convert the resource to a file and use `project.tarTree()` on the file.
 For more information, see <<tar_tree_no_backing_file>>.
 
+==== Task types without explicit cacheability annotations
+
+All task types must now be annotated with either `@CacheableTask`, `@DisableCachingByDefault` or `@UntrackedTask`.
+Having neither annotation present results in an error.
+
 === Removed APIs
 
 ==== Legacy ArtifactTransform API
