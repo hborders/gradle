@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class LocalTaskNode extends TaskNode {
     private boolean isolated;
     private List<? extends ResourceLock> resourceLocks;
     private TaskProperties taskProperties;
-    private Collection<ServiceReferenceSpec> adHocServicesConsumed;
+    private Collection<ServiceReferenceSpec> adHocServicesConsumed = Collections.emptySet();
     private Set<Provider<? extends BuildService<?>>> namedServicesConsumed;
 
     public LocalTaskNode(TaskInternal task, NodeValidator nodeValidator, WorkValidationContext workValidationContext, BuildOperationRunner buildOperationRunner) {
@@ -282,7 +283,7 @@ public class LocalTaskNode extends TaskNode {
     }
 
     /**
-     * Finds all resource locks required by this task, implicitly or exeplicitly.
+     * Finds all resource locks required by this task, implicitly or explicitly.
      *
      * @return a set of all resource locks required
      */
