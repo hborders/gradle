@@ -44,6 +44,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.gradle.api.internal.lambdas.SerializableLambdas.spec;
+
 public class OptionReader {
     private final ListMultimap<Class<?>, OptionElement> cachedOptionElements = ArrayListMultimap.create();
     private final Map<OptionElement, JavaMethod<Object, Collection>> cachedOptionValueMethods = new HashMap<OptionElement, JavaMethod<Object, Collection>>();
@@ -54,7 +56,7 @@ public class OptionReader {
         new BuiltInOptionElement(
             "Causes the task to be re-run even if up-to-date.",
             "rerun",
-            task -> task.getOutputs().upToDateWhen(taskSpec -> false)
+            task -> task.getOutputs().upToDateWhen(spec(taskSpec -> false))
         )
     ).collect(Collectors.toMap(BuiltInOptionElement::getOptionName, Function.identity(), (a, b) -> a, LinkedHashMap::new));
 
