@@ -20,6 +20,7 @@ import org.gradle.internal.build.BuildState
 import org.gradle.internal.buildtree.BuildTreeWorkGraph
 import org.gradle.internal.buildtree.BuildTreeWorkGraphPreparer
 
+
 class ConfigurationCacheAwareBuildTreeWorkGraphPreparer(
     private val delegate: BuildTreeWorkGraphPreparer,
     private val cache: BuildTreeConfigurationCache
