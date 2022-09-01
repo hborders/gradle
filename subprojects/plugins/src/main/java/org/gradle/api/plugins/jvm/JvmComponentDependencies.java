@@ -125,4 +125,15 @@ public interface JvmComponentDependencies {
      * @since 7.6
      */
     Dependency testFixtures(ModuleDependency moduleDependency);
+
+    /**
+     * Create a dependency on the current project's complete view. During compile-time, this dependency will
+     * resolve the current project's implementation in addition to its API. During runtime, this dependency
+     * behaves as a usual project dependency.
+     *
+     * @return A new dependency
+     *
+     * @since 7.6
+     */
+    ModuleDependency projectComplete();
 }

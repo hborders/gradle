@@ -21,7 +21,9 @@ import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.api.artifacts.dsl.DependencyAdder;
+import org.gradle.api.attributes.CompileView;
 import org.gradle.api.internal.artifacts.dsl.dependencies.DependencyFactoryInternal;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.jvm.JvmComponentDependencies;
 import org.gradle.internal.component.external.model.ImmutableCapability;
 import org.gradle.internal.component.external.model.ProjectTestFixtures;
@@ -30,7 +32,7 @@ import javax.inject.Inject;
 
 import static org.gradle.internal.component.external.model.TestFixturesSupport.TEST_FIXTURES_CAPABILITY_APPENDIX;
 
-public class DefaultJvmComponentDependencies implements JvmComponentDependencies {
+public abstract class DefaultJvmComponentDependencies implements JvmComponentDependencies {
     private final DependencyAdder implementation;
     private final DependencyAdder compileOnly;
     private final DependencyAdder runtimeOnly;
@@ -81,6 +83,19 @@ public class DefaultJvmComponentDependencies implements JvmComponentDependencies
             capabilities.requireCapability(new ImmutableCapability(moduleDependency.getGroup(), moduleDependency.getName() + TEST_FIXTURES_CAPABILITY_APPENDIX, null));
         });
         return moduleDependency;
+    }
+
+    @Inject
+    protected abstract Project getCurrentProject();
+
+    @Inject
+    protected abstract ObjectFactory getObjectFactory();
+
+    @Override
+    public ModuleDependency projectComplete() {
+        return getDependencyFactory().create(getCurrentProject()).attributes(attrs -> {
+            attrs.attribute(CompileView.VIEW_ATTRIBUTE, getObjectFactory().named(CompileView.class, CompileView.JAVA_COMPLETE));
+        });
     }
 
     @Override

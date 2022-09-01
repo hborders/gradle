@@ -339,6 +339,25 @@ one of the addresses of the current machine's network interfaces.
 Similarly, the new Gradle property `org.gradle.debug.host` now enables [running the Gradle process with the debugger server](userguide/troubleshooting.html#sec:troubleshooting_build_logic)
 accepting connections via network on Java 9+.
 
+#### Introduced `projectComplete()` dependency for creating unit-like test suites
+
+The [JVM test suite](userguide/jvm_test_suite_plugin.html) `dependencies` block now has support for depending on the complete view of the current project during compile-time. Previously it was only possible to depend on the current project's API. This allows declaration of unit-like test suites which have access to dependencies of project internals which are not declared on the `api` or `compileOnlyApi` configurations. 
+
+For example, the following snippet uses the new `projectComplete()` API to define a new unit-like test suite:
+
+```kotlin
+testing {
+    suites {
+        val unitLikeTestSuite by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            dependencies {
+                implementation(projectComplete())
+            }
+        }
+    }
+}
+```
+
 <a name="ide"></a>
 ### IDE
 
