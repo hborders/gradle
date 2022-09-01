@@ -135,5 +135,5 @@ public interface JvmComponentDependencies {
      *
      * @since 7.6
      */
-    ModuleDependency projectComplete();
+    ProjectDependency projectComplete();
 }

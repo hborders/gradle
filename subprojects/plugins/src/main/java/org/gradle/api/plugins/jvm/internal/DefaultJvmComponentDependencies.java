@@ -47,9 +47,13 @@ public abstract class DefaultJvmComponentDependencies implements JvmComponentDep
     }
 
     @Inject
-    protected DependencyFactoryInternal getDependencyFactory() {
-        throw new UnsupportedOperationException();
-    }
+    protected abstract DependencyFactoryInternal getDependencyFactory();
+
+    @Inject
+    protected abstract Project getCurrentProject();
+
+    @Inject
+    protected abstract ObjectFactory getObjectFactory();
 
     @Override
     public Dependency gradleApi() {
@@ -85,15 +89,9 @@ public abstract class DefaultJvmComponentDependencies implements JvmComponentDep
         return moduleDependency;
     }
 
-    @Inject
-    protected abstract Project getCurrentProject();
-
-    @Inject
-    protected abstract ObjectFactory getObjectFactory();
-
     @Override
-    public ModuleDependency projectComplete() {
-        return getDependencyFactory().create(getCurrentProject()).attributes(attrs -> {
+    public ProjectDependency projectComplete() {
+        return (ProjectDependency) getDependencyFactory().create(getCurrentProject()).attributes(attrs -> {
             attrs.attribute(CompileView.VIEW_ATTRIBUTE, getObjectFactory().named(CompileView.class, CompileView.JAVA_COMPLETE));
         });
     }
