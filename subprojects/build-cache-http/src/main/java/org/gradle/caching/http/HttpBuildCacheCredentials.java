@@ -21,7 +21,7 @@ import org.gradle.api.credentials.PasswordCredentials;
 import javax.annotation.Nullable;
 
 /**
- * Password credentials for a HTTP build cache backend.
+ * Password credentials for a HTTP build cache backend with an HTTP 'Authorization: Basic' header.
  *
  * @since 3.5
  */
